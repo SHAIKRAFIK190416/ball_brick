@@ -1,0 +1,106 @@
+class Ball_Brick:
+
+    def __init__(self,b_a,s_m):
+        self.s_m = s_m
+        self.line_array = []
+        self.b_a = b_a
+
+        for i in range(s_m):
+            self.line_array = []
+
+            for j in range(s_m):
+
+                if i == 0 or j == 0 or i == s_m-1 or j == s_m-1:
+                    self.line_array.append('W')
+
+                else:
+                    self.line_array.append(' ')
+
+            self.b_a.append(self.line_array)
+        
+        self.mid = s_m//2
+        
+        for i in range(s_m):
+
+            if i > 0 and i <s_m-1:
+
+                if i == self.mid:
+                    self.b_a[s_m-1][i] = 'o'
+
+                else:
+                    self.b_a[s_m-1][i] = 'G'
+
+    def insert_data_into_array(self,data_array):
+
+        for i in data_array:
+            self.b_a[i[0]][i[1]] = i[2]
+        
+    def display_output(self,s_m):
+
+        for i in range(s_m):
+            for j in range(s_m):
+                print(self.b_a[i][j],end="")
+
+            print()
+    
+    def travers_the_ball(self,direction,s_m):
+
+        if direction in ['lt','Lt','LT','lT']:
+
+            if self.mid >= 2 and self.mid <= s_m-2:
+                
+                self.b_y[s_m-1][self.mid-1],self.border_array[s_m-1][self.mid] = 'o','G'
+                self.mid = self.mid - 1
+                self.destroy_the_cells()
+
+            else:
+                return
+
+        elif direction in ['RT','rt','Rt','rT']:
+
+            if self.mid >= 2 and self.mid <= s_m-2:
+
+                self.b_y[s_m-1][self.mid+1],self.border_array[s_m-1][self.mid] = 'o','G'
+                self.mid = self.mid + 1
+                self.destroy_the_cells()
+
+            else:
+                return
+        
+        else:
+            self.destroy_the_cells()
+            
+    def destroy_the_cells(self):
+        for i in range(self.s_m-2,-1,-1):
+            if self.b_a[i][self.mid] == ' ':
+                continue
+            else:
+                self.b_a[i][self.mid] -= 1
+                if self.b_a[i][self.mid] == 0:
+                    self.b_a[i][self.mid] = ' '
+                return
+
+
+size_of_matrix = int(input("Enter size of the NxN matrix:"))
+data_array = []
+
+while True:
+    print("Enter the brick's position and the brick type:")
+    data = list(map(int,input().split()))
+    data_array.append(data)
+    termination = input("Do you want to continue(Y or N)")
+
+    if termination == 'n' or termination == 'N':
+        break
+
+Ball_Count = int(input("Enter ball count:"))
+result_array = []
+obj = Ball_Brick(result_array,size_of_matrix)
+obj.insert_data_into_array(data_array)
+obj.display_output(size_of_matrix)
+print("Ball Count is ",Ball_Count)
+
+while True:
+    direction = input("Enter the direction in which the ball need to traverse:")
+    obj.travers_the_ball(direction,size_of_matrix)
+    obj.display_output(size_of_matrix)
